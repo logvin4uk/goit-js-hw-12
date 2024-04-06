@@ -39,6 +39,10 @@ async function submitImageFinder(event) {
     gallery.innerHTML = '';
   } else {
     // запрос
+    // затримка на лоадер
+    loader.classList.add('show');
+    await new Promise(resolve => setTimeout(resolve, 1000)); //
+
     await getImage(value, page)
       // обработка ответа
       .then(collection => {
@@ -57,6 +61,11 @@ async function submitImageFinder(event) {
           addButton.classList.remove('visible-hidden');
           loader.classList.remove('show');
           renderGallery(collection.data.hits);
+
+          // перевірка на кількість картинок у відповіді
+          if (collection.data.hits.length < 15) {
+            addButton.classList.add('visible-hidden');
+          }
         }
       })
       .catch(err => console.log(err));
